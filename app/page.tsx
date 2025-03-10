@@ -31,7 +31,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<StockData[]>('http://www.janata-wifi-sqlmodel.somee.com/api/all');
+        const response = await axios.get<StockData[]>('https://www.janata-wifi-sqlmodel.somee.com/api/all');
         setDatas(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -42,7 +42,7 @@ export default function Home() {
 
   const handleDeleteBook = async (id: string) => {
     try {
-      await axios.delete(`http://www.janata-wifi-sqlmodel.somee.com/api/stock/delete/${id}`);
+      await axios.delete(`https://www.janata-wifi-sqlmodel.somee.com/api/stock/delete/${id}`);
       setDatas((prev) => prev.filter((data) => data.id !== id));
     } catch (error) {
       console.error('Error deleting data:', error);
@@ -68,7 +68,7 @@ export default function Home() {
   const handleDownload = async () => {
     try {
       const response = await axios.post(
-        'http://www.janata-wifi-sqlmodel.somee.com/api/stock/export',
+        'https://www.janata-wifi-sqlmodel.somee.com/api/stock/export',
         { path: downloadPath.Path }, // Send the path inside an object
         {
           headers: {

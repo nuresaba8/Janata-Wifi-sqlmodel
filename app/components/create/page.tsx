@@ -17,7 +17,7 @@ const Page = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://www.janata-wifi-sqlmodel.somee.com/api/stock/create', posts);
+      const response = await axios.post('https://www.janata-wifi-sqlmodel.somee.com/api/stock/create', posts);
       const { id } = response.data;
       setPosts({
         trade_code: '',

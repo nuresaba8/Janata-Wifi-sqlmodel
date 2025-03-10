@@ -18,7 +18,7 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://localhost:44310/api/stock/${id}`);
+        const response = await axios.get(`https://www.janata-wifi-sqlmodel.somee.com/api/stock/${id}`);
         // If the response is not an array, wrap it in one for consistency
         const post = Array.isArray(response.data) ? response.data[0] : response.data;
         const { open, close, trade_code, high, low, volume } = post;
@@ -37,7 +37,7 @@ export default function Page() {
     e.preventDefault();
 
     try {
-      const response = await axios.put(`http://www.janata-wifi-sqlmodel.somee.com/api/stock/update/${id}`, posts);
+      const response = await axios.put(`https://www.janata-wifi-sqlmodel.somee.com/api/stock/update/${id}`, posts);
       console.log("Response:", response);
       navigate.push(`/`);
     } catch (error: any) {
