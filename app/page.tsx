@@ -73,7 +73,6 @@ export default function Home() {
   const [datas, setDatas] = useState<StockData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [downloadPath, setDownloadPath] = useState({ Path: '' });
   const [selectedTradeCode, setSelectedTradeCode] = useState<string>('');
   const itemsPerPage = 10;
 
@@ -110,46 +109,41 @@ export default function Home() {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const handleDownload = async () => {
-    try {
-      const response = await axios.post(
-        'https://www.janata-wifi-sqlmodel.somee.com/api/stock/export',
-        { path: downloadPath.Path },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      console.log(downloadPath.Path);
-      const data = response.data;
-      if (data) {
-        alert(data);
-      }
-    } catch (error: any) {
-      alert('Error: ' + error.response?.data || error.message);
-    }
+  const downloadCSV = () => {
+    const headers = ['Date', 'Trade Code', 'High', 'Low', 'Open', 'Close', 'Volume'];
+    const rows = filteredData.map((data) => [
+      data.date,
+      data.trade_code,
+      data.high,
+      data.low,
+      data.open,
+      data.close,
+      data.volume,
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.join(','))
+      .join('\n');
+
+    // Create a Blob from the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'stock_market_data.csv');
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   const tradeCodes = Array.from(new Set(datas.map((data) => data.trade_code)));
 
   return (
     <div className="container mx-auto p-6 relative">
-      {/* Download Section */}
-      <div className="absolute top-6 right-6 flex items-center space-x-4">
-        <input
-          type="text"
-          name="Path"
-          placeholder="enter_path-ex:E:/path/"
-          className="px-4 py-2 border rounded-md"
-          value={downloadPath.Path}
-          onChange={(e) => setDownloadPath({ ...downloadPath, Path: e.target.value })}
-        />
-        <button
-          onClick={handleDownload}
-          className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
-        >
-          Download
+      {/* Download CSV Button */}
+      <div className="absolute top-6 right-6">
+        <button onClick={downloadCSV} className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+          Download CSV
         </button>
       </div>
 
